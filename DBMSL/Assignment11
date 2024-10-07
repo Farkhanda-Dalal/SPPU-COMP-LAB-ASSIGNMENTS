@@ -1,0 +1,61 @@
+Assignment 11
+31418
+Farkhanda Dalal
+
+1. MapReduce for Maximum Price
+Map Function
+var mapFunction = function() {
+    emit("maxPrice", this.Price); // Emit the price for each product
+};
+Reduce Function
+var reduceFunction = function(key, values) {
+    return Math.max.apply(null, values); // Return the maximum price from the emitted values
+};
+Execute MapReduce
+db.Product.mapReduce(mapFunction, reduceFunction, { out: "price_max" });
+db.price_max.find(); // View the result
+ 
+
+2. MapReduce for Minimum Price
+Map Function
+var mapFunction = function() {
+    emit("minPrice", this.Price); // Emit the price for each product
+};
+Reduce Function
+var reduceFunction = function(key, values) {
+    return Math.min.apply(null, values); // Return the minimum price from the emitted values
+};
+Execute MapReduce
+db.Product.mapReduce(mapFunction, reduceFunction, { out: "price_min" });
+db.price_min.find(); // View the result
+ 
+
+3. MapReduce for sum of all prices:
+var mapFunction = function() {
+    emit("totalPrice", this.Price); // Emit the price for each document
+};
+
+var reduceFunction = function(key, values) {
+    return Array.sum(values);  // Sum all prices
+};
+
+db.Product.mapReduce(mapFunction, reduceFunction, { out: "price_sum" });
+
+db.price_sum.find(); // To view the result
+
+ 
+
+4. Showing all prices in array form:
+var mapFunction = function() {
+    emit("pricesArray", this.Price);  // Emit each price as part of the array
+};
+
+var reduceFunction = function(key, values) {
+    return values;  // Just return all prices in an array
+};
+
+db.Product.mapReduce(mapFunction, reduceFunction, { out: "price_array" });
+
+db.price_array.find(); // To view the result
+ 
+
