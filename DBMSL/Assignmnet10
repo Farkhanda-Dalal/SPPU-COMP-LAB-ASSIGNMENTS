@@ -1,0 +1,73 @@
+Assignment 10
+31418
+Farkhanda Dalal
+
+AGGREGATION PIPELINE:
+1.	Get total number of products and average price of all products:
+db.Product.aggregate([
+  {
+    $group: {
+      _id: null,
+      totalProducts: { $sum: 1 },          // Count total products
+      avgPrice: { $avg: "$Price" }         // Calculate average price
+    }
+  },
+  {
+    $project: {
+      _id: 0,                              // Exclude _id from result
+      totalProducts: 1,
+      avgPrice: 1
+    }
+  }
+])
+ 
+2.	Find total value of inventory (sum of prices) grouped by Brand:
+db.Product.aggregate([
+  {
+    $group: {
+      _id: "$Brand",                     // Group by brand
+      totalValue: {$sum: "$Price"}      // Sum the prices for each brand
+    }
+  },
+  {
+    $sort: { totalValue: -1 }              // Sort by total value in descending order
+  }
+])
+  
+
+3.	Sort and Limit to find top three most expensive Products:
+db.Product.aggregate([
+  {
+    $sort: { Price: -1 }                  // Sort by price in descending order
+  },
+  {
+    $limit: 3                             // Limit to top 3 products
+  }
+])
+ 
+
+4.	Using sort and match to find products worth more than 50000:
+db.Product.aggregate([
+  {
+    $match: { Price: { $gt: 50000 } }      // Filter products with price > 50,000
+  },
+ {$sort: { Price: 1 }      }])  
+ 
+
+
+5.	Find products for which Brand exists and find its avg:
+ 
+
+
+INDEX:
+1.	Create Index:
+db.Product.createIndex({ Price: 1 })
+ 
+
+2.	View Indices on a Table:
+db.Product.getIndexes();
+ 
+
+3.	Drop Index:
+db.Product.dropIndex('Price_1'); 
+
