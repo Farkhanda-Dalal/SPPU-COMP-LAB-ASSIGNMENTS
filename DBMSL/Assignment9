@@ -1,0 +1,127 @@
+Assignment No 9
+31418
+Farkhanda Dalal
+
+Commands for database:
+
+1.    View all database:
+        show dbs
+
+2.    Create database or switch to pre-existing database:
+        use db_name
+eg. Create database named Shop:
+       use Shop
+eg. Switch to pre-existing database Admin:
+        use Admin
+
+3.    View name of database you are currently in:
+        db
+
+4.    Drop a database
+        db.dropDatabase()
+eg. Drop database named Shop:
+       db.dropDatabase()
+
+----------------------------------------------
+Commands for Collections:
+
+1.     View collections in a database:
+        show collections
+
+2.    Add collection in database:
+        db.createCollection('collection_name')
+eg. Create collection named Product:
+        db.createCollection('Product')
+
+ 
+
+3.    Drop collection:
+        db.collection_name.drop()
+eg. Drop collection named Product:
+        db.Product.drop()
+
+4.   Rename collections:
+       db.collection_name.renameCollection("new_collection_name")
+eg.db.Product.renameCollection("product")
+
+---------------------------------------------------
+Commands for Documents:
+
+1.     Insert 1 Document:
+        db.collection_name.insert({//code})
+eg. Insert a document with name,id,price of product in Product collection:
+        db.Product.insertOne({
+        'Name':'Clothes',
+        'Id':12345,
+        'Price':300})
+ 
+
+2. Insert Multiple Documents:
+    db.collection_name.insertMany([{}])
+eg. db.Product.insertMany([
+    {'Name':'Mobile', 'Brand':'One Plus', 'Id':909, 'Price':25000},
+    {'Name':'Laptop', 'Id':100, 'Price':125000},
+    {'Name':'Tablet', 'Brand':'Apple', 'Id':101, 'Price':60000},
+    {'Name':'Smartwatch', 'Brand':'Samsung', 'Id':102, 'Price':20000},
+    {'Name':'Headphones', 'Brand':'Sony', 'Id':103, 'Price':15000},
+    {'Name':'Camera', 'Brand':'Canon', 'Id':104, 'Price':55000},
+    {'Name':'Monitor', 'Brand':'Dell', 'Id':105, 'Price':30000}
+])
+ 
+3.  View all documents in a Collection:
+	db.collection_name.find()
+	db.collection_name.find().pretty()
+eg. View all rows in Collection Product:
+	db.Product.find()
+ 
+
+4. Search a document in collection:
+	db.collection_name.find({//code})
+	db.Product.find({Id:100})
+ 
+
+5. Update one document:
+db.Product.updateOne({ Name: 'Charger' }, 
+{ $set:{Name: 'Charger', Id: 805 }})
+ 
+
+6. Delete One:
+db.Product.deleteOne({Name:'Clothes'})
+
+7. Delete Many:
+db.Product.deleteMany({Name:'Clothes'})
+
+Assignment Questions:
+1.	Find Products in id range of 100 to 103:
+db.Product.find(
+{Id:{$gt:99, $lt:104}});
+
+ 
+
+2.	Find Products with price less than 30000:
+db.Product.find({Price:{$lt:30000}});
+ 
+
+3.	Find Products with price greater than 30000:
+db.Product.find({Price:{$gt:30000}});
+ 
+
+
+4.	Use of AND, OR:
+db.Product.find({
+  $and: [
+    { 'Price': { $gt: 20000 } },  // Price greater than 20000
+    { $or: [
+      { 'Brand': 'Apple' },       // Brand is Apple
+      { 'Brand': 'One Plus' }     // OR Brand is One Plus
+    ]}
+  ]
+})
+ 
+
+5.	Count Products in price range 15000-30000:
+db.Product.find(
+{Price:{$gte:15000, $lte:30000}}).count();
+ 
+
+
