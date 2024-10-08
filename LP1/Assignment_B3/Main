@@ -1,0 +1,57 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        Memory m1=new Memory();
+        Process p1=new Process();
+        Allocate a=new Allocate();
+        
+        System.out.println("Enter size of Memory Block:");
+        Memory m[]=m1.create(sc.nextInt());
+        m1.print(m);
+        
+        ArrayList<Process> p=new ArrayList<Process>();
+        
+        int ch,start;
+        do {
+        	System.out.println("------------------MENU-------------------");
+            System.out.println("\n1.First Fit\n2.Best Fit\n3.Worst Fit\n4.Next Fit\n5.Exit\nEnter your choice:");
+            ch=sc.nextInt();
+            System.out.println("Enter no of processes you want to create:");
+            switch(ch) {
+            case 1:
+            	start=p1.create(sc.nextInt(),p);
+            	a.first(m, p,start);
+            	m1.print(m);
+            	p1.print(p);
+            	break;
+            case 2:
+            	start=p1.create(sc.nextInt(),p);
+            	a.best(m, p,start);
+            	m1.print(m);
+            	break;
+            case 3:
+            	start=p1.create(sc.nextInt(),p);
+            	a.worst(m, p,start);
+            	m1.print(m);
+            	break;
+            case 4:
+            	start=p1.create(sc.nextInt(),p);
+            	a.next(m, p,start);
+            	m1.print(m);
+            	break;
+            case 5:
+            	p1.print(p);
+            	System.out.println("---------END OF PROGRAM------------");
+            	break;
+            default:
+            	System.out.println("---------END OF PROGRAM------------");
+            	break;
+            }
+            
+        }while(ch<5);
+    }
+}
+
