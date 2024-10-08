@@ -1,0 +1,90 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
+
+public class Process {
+    private int block_no;
+    private int process_no;
+    private int size;
+    private boolean status;
+
+    public Process() {
+        
+    }
+
+    public Process(int block_no, int process_no, int size, boolean status) {
+        this.block_no = block_no;
+        this.process_no = process_no;
+        this.size = size;
+        this.status = status;
+    }
+    
+    public int getBlock_no() {
+        return block_no;
+    }
+    public void setBlock_no(int block_no) {
+        this.block_no = block_no;
+    }
+    public int getProcess_no() {
+        return process_no;
+    }
+    public void setProcess_no(int process_no) {
+        this.process_no = process_no;
+    }
+    public int getSize() {
+        return size;
+    }
+    public void setSize(int size) {
+        this.size = size;
+    }
+    public boolean isStatus() {
+        return status;
+    }
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return process_no + "\t\t" + block_no + "\t " + size + "\t  " + status
+                + "\t\t";
+    }
+    
+    
+    public int create(int n,ArrayList<Process> p) {
+    	Scanner sc=new Scanner(System.in);
+    	int start=p.size()+1;
+    	
+    	for (int i = 0; i < n; i++) {
+    		System.out.println("Enter size of process "+(p.size()+1)+":");
+			p.add(new Process(0, (p.size()+1), sc.nextInt(), false));
+		}
+    	
+    	System.out.println("Processes were created!");
+    	return start;
+    }
+
+//    public Process getStart(ArrayList<Process> p) {
+//    	Process last=p.get(p.size()-1);
+//    	for (int i = p.size()-1; i > 0; i--) {
+//			if(p.get(i).isStatus()==true) {
+//				last=p.get(i+1);
+//				break;
+//			}
+//		}
+//    	
+//    	if(last==p.get(p.size()-1)) {
+//    		last=p.get(0);
+//    	}
+//    	return last;
+//    }
+    
+    public void print(ArrayList<Process> p) {
+    	System.out.println("--------------------PROCESS ALLOCATION DETAILS--------------------");
+        System.out.println("|Process No|Block No|Process Size|Status|");
+        for (Process p1 : p) {
+            System.out.println(p1.toString());
+        }
+    }
+    
+}
