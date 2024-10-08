@@ -1,0 +1,50 @@
+import java.util.Random;
+
+public class Memory extends Process{
+
+    private int excess;
+
+    public Memory() {
+    }
+
+    public Memory(int block_no, int process_no, int size, boolean status, int excess) {
+        super(block_no, process_no, size, status);
+        this.excess = excess;
+    }
+
+    public int getExcess() {
+		return excess;
+	}
+
+	public void setExcess(int excess) {
+		this.excess = excess;
+	}
+
+	@Override
+    public String toString() {
+        return super.toString()+excess;
+    }
+
+    public Memory[] create(int n){
+        int arr[]={10,20,30,40};
+        Memory m[]=new Memory[n];
+
+        Random r=new Random();
+        for (int i = 0; i <n; i++) {
+            int random_size=arr[r.nextInt(arr.length)];
+            m[i]=new Memory(i+1, 0, random_size, isStatus(), random_size);
+        }
+
+        return m;
+    }
+    
+    public void print(Memory m[]) {
+    	System.out.println("--------------------MEMORY BLOCK DETAILS--------------------");
+        System.out.println("|Block No|Process Stored|Block Size|Occupied Status|Free Space");
+        for (Memory memory : m) {
+            System.out.println(memory.toString());
+        }
+    }
+    
+    
+}
