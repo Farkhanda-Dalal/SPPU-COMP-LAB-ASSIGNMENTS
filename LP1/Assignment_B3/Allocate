@@ -1,0 +1,153 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class Allocate {
+
+	public void setDetails(Memory m[],ArrayList<Process> p,int j,int i) {
+			m[j].setStatus(true);
+			m[j].setProcess_no(p.get(i).getProcess_no());
+			m[j].setExcess(m[j].getExcess()-p.get(i).getSize());
+			p.get(i).setStatus(true);
+			p.get(i).setBlock_no(m[j].getBlock_no());
+    }
+    
+    public void first(Memory m[],ArrayList<Process> p, int start) {
+    	
+    	for (int i = start-1; i < p.size(); i++) {
+			for (int j = 0; j < m.length; j++) {
+				if(m[j].getExcess()>=p.get(i).getSize()) {
+					setDetails(m,p,j,i);
+					break;
+				}
+			}
+			if(!p.get(i).isStatus()) System.out.println("Process "+(i+1)+" cannot be allocated !");
+		}
+    }
+    
+//    public void best(Memory m[], Process p[], int start, int end) {
+//        for (int i = start; i < end; i++) {
+//        	int curr=i;
+//            Memory[] m1 = Arrays.stream(m)
+//                    .filter(mem -> mem.getExcess() >= p[curr].getSize())
+//                    .toArray(Memory[]::new);
+//            
+//            if (m1.length > 0) {
+//                Arrays.sort(m1, Comparator.comparing(Memory::getExcess));
+//                setDetails(m1, p, 0, i);
+//                if (!p[i].isStatus()) System.out.println("Process " + (i + 1) + " cannot be allocated!");
+//            } else {
+//                System.out.println("Process " + (i + 1) + " cannot be allocated!");
+//            }
+//        }
+//    }
+
+//    public void worst(Memory m[], Process p[], int start, int end) {
+//        for (int i = start; i < end; i++) {
+//        	int curr=i;
+//            Memory[] m1 = Arrays.stream(m)
+//                    .filter(mem -> mem.getExcess() >= p[curr].getSize())
+//                    .toArray(Memory[]::new);
+//            
+//            if (m1.length > 0) {
+//                Arrays.sort(m1, Comparator.comparing(Memory::getExcess));
+//                setDetails(m1, p, m1.length-1, i);
+//                if (!p[i].isStatus()) System.out.println("Process " + (i + 1) + " cannot be allocated!");
+//            } else {
+//                System.out.println("Process " + (i + 1) + " cannot be allocated!");
+//            }
+//        }
+//    }
+    
+    public void best(Memory m[], ArrayList<Process> p, int start) {
+        for (int i = start-1; i < p.size(); i++) {
+            Memory min = null;
+
+            for (int j = 0; j < m.length; j++) {
+               
+                if (m[j].getExcess() >= p.get(i).getSize()) {
+                    if (min == null || m[j].getExcess() < min.getExcess()) {
+                        min = m[j];
+                    }
+                }
+            }
+
+            if (min != null) setDetails(m, p, min.getBlock_no() - 1, i);
+            if (!p.get(i).isStatus()) System.out.println("Process " + (i + 1) + " cannot be allocated!");  
+        }
+    }
+
+    
+    public void worst(Memory m[], ArrayList<Process> p, int start) {
+        for (int i = start-1; i < p.size(); i++) {
+        	Memory max=m[0];
+			for (int j = 1; j < m.length; j++) {
+				if(m[j].getExcess()>=p.get(i).getSize()) {
+					if(m[j].getExcess()>max.getExcess()) {
+						max=m[j];
+					}
+				}
+			}
+			setDetails(m, p, max.getBlock_no()-1, i);
+			if (!p.get(i).isStatus()) System.out.println("Process " + (i + 1) + " cannot be allocated!");
+		}
+    }
+
+//    private int lastAllocatedIndex = -1;
+//    public void next(Memory m[], Process p[], int start, int end) {
+//        for (int i = start; i < end; i++) {
+//            boolean allocated = false;
+//            int initialIndex = lastAllocatedIndex + 1;
+//            for (int j = initialIndex; j < m.length; j++) {
+//                if (m[j].getExcess() >= p[i].getSize()) {
+//                    setDetails(m, p, j, i);
+//                    lastAllocatedIndex = j;
+//                    allocated = true;
+//                    break;
+//                }
+//            }
+//            if (!allocated) {
+//                for (int j = 0; j < initialIndex; j++) {
+//                    if (m[j].getExcess() >= p[i].getSize()) {
+//                        setDetails(m, p, j, i);
+//                        lastAllocatedIndex = j;
+//                        allocated = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (!p[i].isStatus()) System.out.println("Process " + (i + 1) + " cannot be allocated!");
+//        }
+//    }
+    
+    public void next(Memory m[],ArrayList<Process> p,int start) {
+    	for (int i = start-1; i < p.size(); i++) {
+    		Memory last=null;
+			for (int j = m.length-1; j > 0; j--) {
+				if(m[j].isStatus()) {
+					last=m[j];
+					break;
+				}
+			}
+			
+			for (int j = last.getBlock_no(); j < m.length; j++) {
+				if(m[j].getExcess()>=p.get(i).getSize()) {
+					setDetails(m,p,j,i);
+					break;
+				}
+			}
+			
+			if(!p.get(i).isStatus()) {
+				for (int j = 0; j < last.getBlock_no(); j++) {
+					if(m[j].getExcess()>=p.get(i).getSize()) {
+						setDetails(m,p,j,i);
+						break;
+					}
+				}
+			}
+			
+			if (!p.get(i).isStatus()) System.out.println("Process " + (i + 1) + " cannot be allocated!");		}
+    }
+
+}
+
