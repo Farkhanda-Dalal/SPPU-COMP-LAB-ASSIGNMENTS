@@ -1,0 +1,41 @@
+create or replace procedure calc_fine(in roll_no INT)
+begin
+declare days INT;
+declare fine INT;
+declare error INT;
+declare issue_date DATE;
+select Borrower.issue into issue_date from Borrower where Borrower.roll = roll_no;
+set days = DATEDIFF( CURDATE() , issue_date );
+if days <= 30 and days >= 15 then
+set fine = 5 * days;
+else
+set fine = 50 * days;
+end if;
+begin
+declare exit handler for 1452 set error = 1;
+insert into Fine values( roll_no , CURDATE() , fine ) ;
+end;
+if error = 1 then
+select 'Invalid Roll No';
+else
+select 'Fine amount inserted in table';
+end if;
+end;
+
+-----------------------------------------------------------------------------------------
+CREATE TABLE Area(
+radius DECIMAL,
+area DECIMAL)
+CREATE OR REPLACE PROCEDURE Area(IN rad INT)
+BEGIN
+DECLARE area INT;
+DECLARE rad_exception CONDITION FOR SQLSTATE '45000';
+IF rad>=5 AND rad<=9 THEN
+SET area=3.14*rad*rad;
+INSERT INTO Area values(rad,area);
+SELECT "Radius was inserted in table Area" AS Message;
+ELSE
+SIGNAL rad_exception SET MESSAGE_TEXT = 'Radius value outside 5 and 9 is not
+allowed.';
+END IF;
+END;
