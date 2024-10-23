@@ -1,0 +1,76 @@
+INSERT INTO Student values (31418,"Farkhanda Dalal",1400), (31455,"Misbah Bagwan",980), (31438,"Mansi Jangle",850), (31405,"Aryan Kadole",825), (31483,"Nilkashi Sonawane",1700);
+
+CREATE TABLE Result
+( roll int,
+name varchar(30), class varchar(20),
+foreign key(roll) REFERENCES Student(roll) ON DELETE CASCADE
+);
+
+--PROCEDURE
+CREATE OR REPLACE PROCEDURE proc_Grade(roll int ) BEGIN
+DECLARE name varchar(20); DECLARE marks int; DECLARE class varchar(20);
+DECLARE mark_exception CONDITION FOR SQLSTATE "45000";
+DECLARE error int DEFAULT 0;
+
+SELECT Student.total_marks, Student.name INTO marks,name FROM Student
+WHERE roll=Student.roll;
+
+IF marks IS NULL THEN
+SET error=1;
+ELSEIF marks>1500 or marks<0 THEN
+SIGNAL mark_exception SET MESSAGE_TEXT ="INVALID MARKS!!! Marks should be in in range 0 to 1500";
+ELSEIF marks<=1500 and marks>=990 THEN SET class="Distinction";
+ELSEIF marks<=989 and marks>=900 THEN SET class="First Class";
+ELSEIF marks<=899 and marks>=825 THEN SET class="Higher Second Class";
+ELSE
+SET class="Fail";
+END IF;
+IF class IS NOT NULL THEN
+INSERT INTO Result values(roll, name,class);
+ELSE
+SET error=2;
+END IF;
+
+IF error=1 THEN
+ 
+SELECT "Invalid Roll No" AS MESSAGE; ELSEIF error=2 THEN
+SELECT "An error occurred while setting class" AS MESSAGE; END IF;
+
+END//
+
+
+– FUNCTION:
+CREATE FUNCTION proc_Grade(roll int ) RETURNS varchar(250) BEGIN
+DECLARE name varchar(20); DECLARE marks int; DECLARE class varchar(20);
+DECLARE mark_exception CONDITION FOR SQLSTATE "45000";
+DECLARE error int DEFAULT 0; DECLARE result_message varchar(250);
+
+SELECT Student.total_marks, Student.name INTO marks,name FROM Student
+WHERE roll=Student.roll;
+
+IF marks IS NULL THEN
+SET error=1;
+ELSEIF marks>1500 or marks<0 THEN
+SIGNAL mark_exception SET MESSAGE_TEXT ="INVALID MARKS!!! Marks should be in in range 0 to 1500";
+ 
+ELSEIF marks<=1500 and marks>=990 THEN SET class="Distinction";
+ELSEIF marks<=989 and marks>=900 THEN SET class="First Class";
+ELSEIF marks<=899 and marks>=825 THEN SET class="Higher Second Class";
+ELSE
+SET class="Fail";
+END IF;
+
+IF class IS NOT NULL THEN
+INSERT INTO Result values(roll, name,class);
+ELSE
+SET error=2;
+END IF;
+
+IF error=1 THEN
+SET result_message ="Invalid Roll No"; ELSEIF error=2 THEN
+SET result_message ="An error occurred while setting class"; END IF;
+
+SET result_message ="Function was executed successfully"; RETURN result_message ;
+END//
+ 
+
