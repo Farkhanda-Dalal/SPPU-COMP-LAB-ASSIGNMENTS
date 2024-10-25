@@ -1,0 +1,93 @@
+import org.bson.Document;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection; import com.mongodb.client.MongoDatabase; import com.mongodb.client.MongoCursor;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Assignment12 {
+
+private MongoClient mongoClient;
+private MongoDatabase database;
+private MongoCollection<Document> collection;
+
+public Assignment12(String dbName, String collectionName) { mongoClient = new MongoClient("localhost", 27017); database = mongoClient.getDatabase(dbName);
+collection = database.getCollection(collectionName);
+}
+
+// Create (Insert) Documents
+public void createDocuments() {
+Scanner scanner = new Scanner(System.in); System.out.print("Enter college name: "); String college = scanner.nextLine(); System.out.print("Enter branch name: "); String branch = scanner.nextLine();
+Document doc = new Document("college", college).append("branch", branch);
+collection.insertOne(doc);
+System.out.println("Inserted document: " + doc.toJson());
+}
+
+// Read (Find) Documents
+public void readDocuments() { System.out.println("Documents in the collection:");
+MongoCursor<Document> cursor = collection.find().iterator();
+while (cursor.hasNext()) { System.out.println(cursor.next().toJson());
+}
+ 
+}
+
+// Update Documents
+public void updateDocument() {
+Scanner scanner = new Scanner(System.in); System.out.print("Enter college name to update: "); String college = scanner.nextLine(); System.out.print("Enter new branch name: ");
+String newBranch = scanner.nextLine();
+
+collection.updateOne(new Document("college", college),
+new Document("$set", new Document("branch", newBranch))); System.out.println("Updated document where college is " + college);
+}
+
+// Delete Documents
+public void deleteDocuments() {
+Scanner scanner = new Scanner(System.in); System.out.print("Enter college name to delete: "); String college = scanner.nextLine();
+
+collection.deleteOne(new Document("college", college)); System.out.println("Deleted one document where college is " + college);
+}
+
+public void close() { mongoClient.close();
+System.out.println("Mongo connection closed.");
+}
+
+public static void main(String[] args) {
+Assignment12 example = new Assignment12("connectiondb", "cutoff"); Scanner scanner = new Scanner(System.in);
+int choice;
+
+do {
+System.out.println("\n--- MongoDB Menu ---"); System.out.println("1. Create Document"); System.out.println("2. Read Documents"); System.out.println("3. Update Document"); System.out.println("4. Delete Document"); System.out.println("5. Exit"); System.out.print("Enter your choice: "); choice = scanner.nextInt(); scanner.nextLine();
+
+switch (choice) {
+case 1:
+example.createDocuments();
+break; case 2:
+example.readDocuments();
+break; case 3:
+example.updateDocument();
+break; case 4:
+example.deleteDocuments();
+break; case 5:
+example.close();
+break;
+ 
+default:
+System.out.println("Invalid choice. Please try again.");
+}
+} while (choice != 5);
+}
+}
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
