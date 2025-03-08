@@ -15,4 +15,4 @@ TE Sem 5: </br>
 TE Sem 6: </br>
 - [LP2](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/LP2)
 - [DSBDAL](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/DSBDAL)
-- - [WTLL](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/WTL)
+- [WTLL](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/WTL)
