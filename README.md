@@ -11,3 +11,8 @@ SE Sem 4: </br>
 TE Sem 5: </br>
 - [LP1](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/LP1)
 - [DBMSL](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/DBMSL)
+
+TE Sem 6: </br>
+- [LP2](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/LP2)
+- [DSBDAL](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/DSBDAL)
+- - [WTLL](https://github.com/Farkhanda-Dalal/SPPU-COMP-LAB-ASSIGNMENTS/tree/main/WTL)
