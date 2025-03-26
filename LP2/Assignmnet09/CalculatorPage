@@ -1,0 +1,30 @@
+<apex:page controller="CalculatorController">
+    <apex:form>
+        <apex:pageBlock title="Salesforce Calculator">
+
+            <apex:pageBlockSection columns="1">
+                <apex:outputLabel value="Enter Number 1:"/>
+                <apex:inputText value="{!num1}" />
+
+                <apex:outputLabel value="Enter Number 2 (for power operation):"/>
+                <apex:inputText value="{!num2}" />
+            </apex:pageBlockSection>
+
+            <apex:pageBlockButtons>
+                <apex:commandButton value="Add" action="{!add}" />
+                <apex:commandButton value="Subtract" action="{!subtract}" />
+                <apex:commandButton value="Multiply" action="{!multiply}" />
+                <apex:commandButton value="Divide" action="{!divide}" />
+                <apex:commandButton value="Square (of Number 1)" action="{!square}" />
+                <apex:commandButton value="Power (Number 1 ^ Number 2)" action="{!power}" />
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockSection columns="1">
+                <apex:outputPanel layout="block" style="margin-top:10px; font-weight:bold; font-size:16px;">
+                    Result: <apex:outputText value="{!result}" />
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
