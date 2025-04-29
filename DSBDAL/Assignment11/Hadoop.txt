@@ -1,0 +1,130 @@
+Hadoop wordcount
+
+# on terminal
+
+-stop-all.sh
+-start-all.sh
+-jps
+
+# go to firefox
+
+-open localhost:9870
+-go to utilities
+-choose folder wala option (browse file system)
+
+# go to terminal
+
+-hadoop fs -mkdir /Div
+-Hadoop fs -mkdir /Div/input
+
+# go to eclipse
+
+-new - java project - give project name - Hadoop (name)
+-from src - delete module info.java file
+-go to Hadoop - right click - new package - give package name - Hadoop (name)
+-now, in src - right click - new class - give class name - WordCount (name)
+-paste wordcount code in WordCount.java
+- in code, change the package name and the class name to whatever you have taken ( here, Hadoop and WordCount)
+- right click on main folder ( Hadoop), go to "properties" -> java compiler -> deselect the option "enable project specific settings" and change the compliance to "11". apply changes and close
+- now, just to check, right click on src, go to properties and verify the compliance, it should be 11.
+
+- right click on main folder (Hadoop), choose "build path" -> Configure build path, in "libraries" , click on "class path",click on " add external jars" , go to 
+home -> Hadoop 3.4.1 -> share -> Hadoop -> first 4 folders ke saare jar files paste karo.
+
+- right click on Hadoop ( main folder), select "export" option -> java -> jar file -> click on browse, and create a new jar file ( for eg : HadoopA.jar ) , click on save and finish.
+remember the jar file name.
+
+#go to text editor
+write text
+eg: hi
+    hello
+    hello
+    hi
+    bye
+name it as "ipt" ( dont give extension .txt)
+
+
+#go to terminal
+
+# hadoop fs -put SOURCE DESTINATION (format)
+-hadoop fs -put ipt /Div/input/ipt
+
+# hadoop jar JARFILENAME PACKAGENAME.CLASSNAME SOURCE DESTINATION (format)
+-hadoop jar HadoopA.jar Hadoop.WordCount /Div/input/ipt /Div/output
+
+# go to localhost:9870
+
+-utilties -> browse the file system -> go to "Div" -> input -> ipt -> click on head the file system -> you will see your text file content
+-now go to Div -> output -> click on part-r-00000 -> click on head the file system -> YOU WILL SEE THE OUTPUT
+
+###Code 
+
+package hadoopA;
+
+import java.io.IOException;
+import java.util.StringTokenizer;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class WordCount {
+
+    public static class TokenizerMapper
+            extends Mapper<Object, Text, Text, IntWritable> {
+
+        private final static IntWritable one = new IntWritable(1);
+        private Text word = new Text();
+
+        public void map(Object key, Text value, Context context)
+                throws IOException, InterruptedException {
+            StringTokenizer itr = new StringTokenizer(value.toString());
+            while (itr.hasMoreTokens()) {
+                word.set(itr.nextToken());
+                context.write(word, one);
+            }
+        }
+    }
+
+    public static class IntSumReducer
+            extends Reducer<Text, IntWritable, Text, IntWritable> {
+
+        private IntWritable result = new IntWritable();
+
+        public void reduce(Text key, Iterable<IntWritable> values,
+                           Context context)
+                throws IOException, InterruptedException {
+            int sum = 0;
+            for (IntWritable val : values) {
+                sum += val.get();
+            }
+            result.set(sum);
+            context.write(key, result);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "word count");
+        job.setJarByClass(WordCount.class);
+        job.setMapperClass(TokenizerMapper.class);
+        job.setCombinerClass(IntSumReducer.class);
+        job.setReducerClass(IntSumReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+  
+
+  
+
+
