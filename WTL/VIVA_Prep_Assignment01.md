@@ -53,14 +53,15 @@
 * **Responsive design:** Should adjust to screen sizes (mobile, desktop).
 * **Performance:** Page should load fast.
 * **Accessibility:** Usable by people with disabilities.
-* **Security:** Safe from attacks like XSS, CSRF, etc.
+* **Security:** Safe from attacks like XSS(Cross Site Scripting can be stopped using Content Scurity Policy), CSRF (Cross Server Response Forgery can be stopped using same site cookies), etc.
 
 ---
 
 ### **5) What is the purpose of HTTP?**
 
-HTTP (HyperText Transfer Protocol) is the **communication protocol** used for transferring data (HTML, images, etc.) between **web browser (client)** and **web server**.
-
+- HTTP (HyperText Transfer Protocol) is the **communication protocol** used for communication over the web.
+- Used for transferring data (HTML, images, etc.) between **web browser (client)** and **web server**.
+- Works on a request-response model
 ---
 
 ### **6) How does a Web Browser work?**
@@ -80,6 +81,28 @@ HTTP (HyperText Transfer Protocol) is the **communication protocol** used for tr
 4. Server processes request and sends **HTTP response** (webpage data)
 5. Browser displays the web page after parsing HTML/CSS/JS
 
+A web browser is a software application used to access and display content from the web, such as webpages, images, and videos.
+
+1. User enters a URL
+Example: https://www.example.com
+The browser starts by interpreting this URL to find the domain.
+2. DNS Lookup
+The browser contacts a DNS (Domain Name System) server to translate the domain name into an IP address.
+Example: www.example.com → 93.184.216.34
+3. Send HTTP/HTTPS Request
+The browser sends an HTTP or HTTPS request to the server at the resolved IP address.
+It requests specific resources like an HTML file, images, or scripts.
+4. Server Responds
+The server sends back an HTTP response, which includes:
+Status code (e.g., 200 OK, 404 Not Found)
+HTML content
+CSS, JavaScript, images, etc.
+5. Rendering the Page
+The browser processes the HTML and builds the DOM (Document Object Model).
+Then it:
+Loads and applies CSS to style elements.
+Executes JavaScript to add interactivity or fetch more data.
+Displays the final visual layout to the user.
 ---
 
 ### **8) Definitions**
