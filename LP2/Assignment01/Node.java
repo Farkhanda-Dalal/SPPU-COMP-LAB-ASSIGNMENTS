@@ -1,13 +1,10 @@
-import java.util.*;
+ // Inner class to represent a node and its level in BFS
+class NodeLevel{
+    int node;
+    int level;
 
-// Node of the Graph
-class Node {
-    int dest;
-    Node next;
-
-    public Node(int data) {
-        this.dest = data;
-        this.next = null;
+    NodeLevel(int node, int level) {
+        this.node = node;
+        this.level = level;
     }
 }
-
