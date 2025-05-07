@@ -1,0 +1,14 @@
+<apex:page controller="MatrixAdditionController">
+    <apex:form>
+        <apex:pageBlock title="Matrix Addition">
+            <apex:pageBlockSection columns="1">
+                <apex:inputTextarea value="{!matrix1}" rows="4" cols="40" label="Enter Matrix 1 (rows separated by semicolon ;, columns by comma ,)" />
+                <apex:inputTextarea value="{!matrix2}" rows="4" cols="40" label="Enter Matrix 2 (same format)" />
+                <apex:commandButton value="Add Matrices" action="{!addMatrices}" />
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Result">
+                <apex:outputText value="{!result}" style="white-space:pre; font-weight:bold;" />
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
