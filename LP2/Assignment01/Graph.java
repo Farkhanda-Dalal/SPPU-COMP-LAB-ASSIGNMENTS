@@ -1,120 +1,92 @@
+import java.util.*;
 
 class Graph {
-    String[] cities;
-    Node[] adjList;
-    int nv;
+    private Map<Integer, List<Integer>> adjList;
 
-    public Graph(int n) {
-        this.nv = n;
-        adjList = new Node[n];
-        cities = new String[n]; // to store the names of the cities
+    public Graph() {
+        adjList = new HashMap<>();
     }
 
-    // get Id(index of the city)
-    int getIndex(String city) {
-        for (int i = 0; i < nv; i++) {
-            if (cities[i].equals(city))
-                return i;
-        }
-        return -1;
+    public void addEdge(int u, int v) {
+        adjList.computeIfAbsent(u, k -> new ArrayList<>()).add(v);
+        adjList.computeIfAbsent(v, k -> new ArrayList<>()).add(u);
     }
 
-    // add an edge (link between cities)
-    void addEdge(int s, int d) {
-        Node newNode = new Node(d);
-        newNode.next = adjList[s];
-        adjList[s] = newNode;
-
-        newNode = new Node(s);
-        newNode.next = adjList[d];
-        adjList[d] = newNode;
-    }
-
-    // Display Graph
-    void displayGraph() {
-        for (int i = 0; i < nv; i++) {
-            System.out.print(cities[i] + " -> ");
-            Node temp = adjList[i];
-            while (temp != null) {
-                System.out.print(cities[temp.dest] + " ");
-                temp = temp.next;
+    public void printGraph() {
+        System.out.println("Graph Representation (Adjacency List):");
+        for (Map.Entry<Integer, List<Integer>> entry : adjList.entrySet()) {
+            System.out.print(entry.getKey() + " -> ");
+            for (Integer neighbor : entry.getValue()) {
+                System.out.print(neighbor + " ");
             }
             System.out.println();
         }
     }
 
-    // Initialize Map / Network
-    void initMap(Scanner sc) {
-        for (int i = 0; i < nv; i++) {
-            System.out.print("Enter the city no " + (i + 1) + ": ");
-            cities[i] = sc.next();
-        }
+    public void dfs(int start) {
+        Set<Integer> visited = new HashSet<>();
+        Map<Integer, Integer> levelMap = new HashMap<>();
+        List<Integer> traversalOrder = new ArrayList<>();
 
-        for (int i = 0; i < nv; i++) {
-            System.out.println("Enter number of cities connected to " + cities[i] + ": ");
-            int count = sc.nextInt();
-            for (int j = 0; j < count; j++) {
-                System.out.print("Enter connected city: ");
-                String des = sc.next();
-                int srcId = getIndex(cities[i]);
-                int desId = getIndex(des);
+        System.out.print("DFS Traversal: ");
+        dfsRecursive(start, visited, 0, levelMap, traversalOrder);
+        System.out.println();
 
-                if (srcId == -1 || desId == -1) {
-                    System.out.println("Unknown City!");
-                    continue;
-                }
-                addEdge(srcId, desId);
-            }
+        for (int node : traversalOrder) {
+            System.out.println(node + " at level " + levelMap.get(node));
         }
     }
 
-    // BFS - Breadth First Search
-    void BFS(int src) {
-        boolean[] visited = new boolean[nv];
+    private void dfsRecursive(int node, Set<Integer> visited, int level, Map<Integer, Integer> levelMap, List<Integer> traversalOrder) {
+        visited.add(node);
+        traversalOrder.add(node);
+        System.out.print(node + " ");
+        levelMap.put(node, level);
+
+        for (int neighbor : adjList.getOrDefault(node, new ArrayList<>())) {
+            if (!visited.contains(neighbor)) {
+                dfsRecursive(neighbor, visited, level + 1, levelMap, traversalOrder);
+            }
+        }
+    }
+    public void bfs(int start) {
+        Set<Integer> visited = new HashSet<>();
         Queue<Integer> queue = new LinkedList<>();
-
-        queue.add(src);
-        visited[src] = true;
-
-        System.out.println("BFS Traversal:");
-        while (!queue.isEmpty()) {
-            int curr = queue.poll();
-            System.out.print(cities[curr] + " ");
-            Node temp = adjList[curr];
-            while (temp != null) {
-                int neighbor = temp.dest;
-                if (!visited[neighbor]) {
-                    visited[neighbor] = true;
-                    queue.add(neighbor);
-                }
-                temp = temp.next;
+        Map<Integer, Integer> levelMap = new HashMap<>();
+        List<Integer> traversalOrder = new ArrayList<>();
+    
+        queue.offer(start);
+        visited.add(start);
+        levelMap.put(start, 0);
+    
+        System.out.print("BFS Traversal: ");
+        bfsRecursive(queue, visited, levelMap, traversalOrder);
+    
+        System.out.println();
+        for (int node : traversalOrder) {
+            System.out.println(node + " at level " + levelMap.get(node));
+        }
+    }
+    
+    private void bfsRecursive(Queue<Integer> queue, Set<Integer> visited,
+                              Map<Integer, Integer> levelMap, List<Integer> traversalOrder) {
+        if (queue.isEmpty()) return;
+    
+        int node = queue.poll();
+        traversalOrder.add(node);
+        System.out.print(node + " ");
+        int currentLevel = levelMap.get(node);
+    
+        for (int neighbor : adjList.getOrDefault(node, new ArrayList<>())) {
+            if (!visited.contains(neighbor)) {
+                queue.offer(neighbor);
+                visited.add(neighbor);
+                levelMap.put(neighbor, currentLevel + 1);
             }
         }
-        System.out.println();
+    
+        // Recurse with the updated queue
+        bfsRecursive(queue, visited, levelMap, traversalOrder);
     }
-
-    // DFS - Depth First Search
-    void DFS(int src) {
-        boolean[] visited = new boolean[nv];
-        Stack<Integer> stack = new Stack<>();
-
-        stack.push(src);
-        visited[src] = true;
-
-        System.out.println("DFS Traversal:");
-        while (!stack.isEmpty()) {
-            int curr = stack.pop();
-            System.out.print(cities[curr] + " ");
-            Node temp = adjList[curr];
-            while (temp != null) {
-                int neighbor = temp.dest;
-                if (!visited[neighbor]) {
-                    visited[neighbor] = true;
-                    stack.push(neighbor);
-                }
-                temp = temp.next;
-            }
-        }
-        System.out.println();
-    }
+    
 }
