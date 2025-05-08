@@ -1,0 +1,19 @@
+<apex:page controller="AreaCalculatorController">
+    <apex:form>
+        <apex:pageBlock title="Area Calculator">
+            <apex:pageBlockSection columns="1">
+                <apex:selectList value="{!selectedShape}" size="1" label="Select Shape">
+                    <apex:selectOptions value="{!shapeOptions}" />
+                </apex:selectList>
+                <apex:inputText value="{!input1}" label="{!input1Label}" />
+                <apex:inputText value="{!input2}" label="{!input2Label}" rendered="{!showSecondInput}" />
+                <apex:commandButton value="Calculate Area" action="{!calculateArea}" rerender="resultPanel" />
+            </apex:pageBlockSection>
+            <apex:outputPanel id="resultPanel">
+                <apex:pageBlockSection title="Result" rendered="{!NOT(ISNULL(result))}">
+                    <apex:outputText value="{!result}" style="font-weight:bold; font-size:16px;" />
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
