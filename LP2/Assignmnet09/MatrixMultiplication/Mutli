@@ -1,0 +1,45 @@
+<apex:page controller="MatrixMultiplicationController">
+    <apex:form>
+        <apex:pageBlock title="Matrix Multiplication">
+            <apex:pageBlockSection title="Matrix Dimensions" columns="2">
+                <apex:inputText value="{!rowsA}" label="Matrix A Rows" />
+                <apex:inputText value="{!colsA}" label="Matrix A Columns" />
+                <apex:inputText value="{!rowsB}" label="Matrix B Rows" />
+                <apex:inputText value="{!colsB}" label="Matrix B Columns" />
+                <apex:commandButton value="Initialize Matrices" action="{!initializeMatrices}" rerender="matrixInputs,resultPanel" />
+            </apex:pageBlockSection>
+
+            <apex:outputPanel id="matrixInputs">
+                <apex:pageBlockSection title="Matrix A" columns="1">
+                    <apex:repeat value="{!matrixA}" var="row" >
+                        <apex:repeat value="{!row}" var="cell" >
+                            <apex:inputText value="{!cell}" style="width:60px;" />
+                        </apex:repeat><br/>
+                    </apex:repeat>
+                </apex:pageBlockSection>
+
+                <apex:pageBlockSection title="Matrix B" columns="1">
+                    <apex:repeat value="{!matrixB}" var="row" >
+                        <apex:repeat value="{!row}" var="cell" >
+                            <apex:inputText value="{!cell}" style="width:60px;" />
+                        </apex:repeat><br/>
+                    </apex:repeat>
+                </apex:pageBlockSection>
+
+                <apex:commandButton value="Multiply Matrices" action="{!multiplyMatrices}" rerender="resultPanel" />
+            </apex:outputPanel>
+
+            <apex:outputPanel id="resultPanel">
+                <apex:pageBlockSection title="Result" rendered="{!NOT(ISNULL(resultMatrix)) && resultMatrix.size > 0}">
+                    <apex:repeat value="{!resultMatrix}" var="row">
+                        <apex:repeat value="{!row}" var="cell">
+                            <apex:outputText value="{!cell}" style="display:inline-block;width:60px;text-align:center;" />
+                        </apex:repeat><br/>
+                    </apex:repeat>
+                </apex:pageBlockSection>
+
+                <apex:outputText value="{!errorMessage}" rendered="{!NOT(ISBLANK(errorMessage))}" style="color:red;font-weight:bold;" />
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
