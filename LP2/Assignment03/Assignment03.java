@@ -1,130 +1,134 @@
 import java.util.*;
 
-class Graph {
-    private int nv;
-    private List<List<Pair>> adjList;
+public class App {
 
-    static class Pair {
-        int vertex, weight;
-        Pair(int v, int w) {
-            this.vertex = v;
-            this.weight = w;
-        }
-    }
-
-    public Graph(int nv) {
-        this.nv = nv;
-        adjList = new ArrayList<>();
-        for (int i = 0; i < nv; i++) {
-            adjList.add(new ArrayList<>());
-        }
-    }
-
-    public void addEdge(int src, int des, int weight) {
-        adjList.get(src).add(new Pair(des, weight));
-        adjList.get(des).add(new Pair(src, weight)); // For undirected graph
-    }
-
-    public void primsMST(int start) {
-        int[] parent = new int[nv];
-        int[] key = new int[nv];
-        boolean[] mstSet = new boolean[nv];
-
-        PriorityQueue<Pair> pq = new PriorityQueue<>(Comparator.comparingInt(p -> p.weight));
-        Arrays.fill(key, Integer.MAX_VALUE);
-        key[start] = 0;
-        parent[start] = -1;
-        pq.add(new Pair(start, 0));
-
-        while (!pq.isEmpty()) {
-            int u = pq.poll().vertex;
-            mstSet[u] = true;
-
-            for (Pair neighbor : adjList.get(u)) {
-                int v = neighbor.vertex;
-                int weight = neighbor.weight;
-
-                if (!mstSet[v] && weight < key[v]) {
-                    parent[v] = u;
-                    key[v] = weight;
-                    pq.add(new Pair(v, key[v]));
-                }
-            }
-        }
-
-        int totalWeight = 0;
-        System.out.println("\nMinimum Spanning Tree (Prim's Algorithm):");
-        for (int i = 1; i < nv; i++) {
-            System.out.println(parent[i] + " - " + i + " : " + key[i]);
-            totalWeight += key[i];
-        }
-        System.out.println("Total weight of MST: " + totalWeight);
-    }
-}
-
-class Sorting {
-    public void selectionSort(int[] arr) {
+    // 1. Greedy Selection Sort
+    public static void selectionSort(int[] arr) {
         int n = arr.length;
-
         for (int i = 0; i < n - 1; i++) {
-            int minIndex = i;
-
+            int minIdx = i;
             for (int j = i + 1; j < n; j++) {
-                if (arr[j] < arr[minIndex]) {
-                    minIndex = j;
-                }
+                if (arr[j] < arr[minIdx])
+                    minIdx = j;
             }
-
-            int temp = arr[minIndex];
-            arr[minIndex] = arr[i];
+            // Swap
+            int temp = arr[minIdx];
+            arr[minIdx] = arr[i];
             arr[i] = temp;
         }
-
-        System.out.println("\nSorted Array (Selection Sort): " + Arrays.toString(arr));
     }
-}
 
-public class GreedyAlgorithms {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String userInput;
+    // 2. Job Scheduling Problem (Greedy by Profit)
+    static class Job {
+        String id;
+        int deadline, profit;
 
-        do {
-            System.out.println("\nChoose an algorithm to execute:");
-            System.out.println("1. Prim's Algorithm (MST)");
-            System.out.println("2. Selection Sort");
-            System.out.println("Type 'end' to exit.");
-            System.out.print("Enter your choice: ");
-            userInput = sc.next().toLowerCase(); // Convert to lowercase for case insensitivity
+        Job(String id, int deadline, int profit) {
+            this.id = id;
+            this.deadline = deadline;
+            this.profit = profit;
+        }
+    }
 
-            if (userInput.equals("1")) {
-                Graph g = new Graph(5);
-                g.addEdge(0, 1, 2);
-                g.addEdge(0, 3, 6);
-                g.addEdge(1, 2, 3);
-                g.addEdge(1, 3, 8);
-                g.addEdge(1, 4, 5);
-                g.addEdge(2, 4, 7);
-                g.addEdge(3, 4, 9);
-                g.primsMST(0);
-            } else if (userInput.equals("2")) {
-                System.out.print("Enter the number of elements in the array: ");
-                int n = sc.nextInt();
-                int[] arr = new int[n];
+    public static void scheduleJobs(Job[] jobs) {
+        Arrays.sort(jobs, (a, b) -> b.profit - a.profit); // Sort by profit descending
 
-                System.out.println("Enter the elements:");
-                for (int i = 0; i < n; i++) {
-                    arr[i] = sc.nextInt();
+        int n = jobs.length;
+        boolean[] slot = new boolean[n];
+        String[] result = new String[n];
+
+        for (Job job : jobs) {
+            for (int j = Math.min(n, job.deadline) - 1; j >= 0; j--) {
+                if (!slot[j]) {
+                    slot[j] = true;
+                    result[j] = job.id;
+                    break;
                 }
-
-                Sorting sorting = new Sorting();
-                sorting.selectionSort(arr);
-            } else if (!userInput.equals("end")) {
-                System.out.println("Invalid choice! Please enter 1, 2, or 'end'.");
             }
-        } while (!userInput.equals("end"));
+        }
 
-        System.out.println("Program terminated.");
-        sc.close();
+        System.out.println("Scheduled Jobs:");
+        for (String id : result) {
+            if (id != null) System.out.print(id + " ");
+        }
+        System.out.println();
+    }
+
+    // 3. Prim's Minimum Spanning Tree (Adjacency Matrix)
+    public static void primMST(int[][] graph) {
+        int V = graph.length;
+        int[] parent = new int[V];
+        int[] key = new int[V];
+        boolean[] mstSet = new boolean[V];
+
+        for (int i = 0; i < V; i++) {
+            key[i] = Integer.MAX_VALUE;
+            mstSet[i] = false;
+        }
+
+        key[0] = 0;
+        parent[0] = -1;
+
+        for (int count = 0; count < V - 1; count++) {
+            int u = minKey(key, mstSet);
+            mstSet[u] = true;
+
+            for (int v = 0; v < V; v++) {
+                if (graph[u][v] != 0 && !mstSet[v] && graph[u][v] < key[v]) {
+                    parent[v] = u;
+                    key[v] = graph[u][v];
+                }
+            }
+        }
+
+        System.out.println("Edge \tWeight");
+        for (int i = 1; i < V; i++)
+            System.out.println(parent[i] + " - " + i + "\t" + graph[i][parent[i]]);
+    }
+
+    private static int minKey(int[] key, boolean[] mstSet) {
+        int min = Integer.MAX_VALUE, minIdx = -1;
+
+        for (int v = 0; v < key.length; v++) {
+            if (!mstSet[v] && key[v] < min) {
+                min = key[v];
+                minIdx = v;
+            }
+        }
+
+        return minIdx;
+    }
+
+    public static void main(String[] args) {
+        // Test Selection Sort
+        int[] arr = {29, 10, 14, 37, 13};
+        System.out.print("Selection Sort: ");
+        selectionSort(arr);
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+        System.out.println();
+
+        // Test Job Scheduling
+        Job[] jobs = {
+            new Job("J1", 2, 100),
+            new Job("J2", 1, 19),
+            new Job("J3", 2, 27),
+            new Job("J4", 1, 25),
+            new Job("J5", 3, 15)
+        };
+        System.out.print("Job Scheduling: ");
+        scheduleJobs(jobs);
+
+        // Test Prim's MST
+        int[][] graph = {
+            {0, 2, 0, 6, 0},
+            {2, 0, 3, 8, 5},
+            {0, 3, 0, 0, 7},
+            {6, 8, 0, 0, 9},
+            {0, 5, 7, 9, 0}
+        };
+        System.out.println("Prim's MST:");
+        primMST(graph);
     }
 }
